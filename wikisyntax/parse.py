@@ -25,10 +25,13 @@ class WikiParse(object):
         return token
 
     def get_user_cache_key(self):
-        return self.user.username if self.user and self.user.is_authenticated() else ''
+        return self.user.username if self.user.is_authenticated() else 'anonym'
 
     def make_cache_key(self, token, wiki_label=''):
-        return "wiki::%s::%s" % (slugify(wiki_label + token), self.get_user_cache_key())
+        key = "wiki::%s" % slugify(wiki_label + token)
+        if self.user:
+            key = '%s::%s' % (key, self.get_user_cache_key())
+        return key
 
     def parse(self, string):
         string = string or u''
